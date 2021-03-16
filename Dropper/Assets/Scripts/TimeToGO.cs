@@ -7,12 +7,14 @@ using UnityEngine.UI;
 public class TimeToGO : MonoBehaviour
 {
     [SerializeField] private Text timeField;
+    
     [SerializeField] private GameObject goText;
     [SerializeField] private GameObject timeText;
+    [SerializeField] private GameObject pickUpText;
 
     private Collision col;
 
-    float timeLeft = 3.0f;
+    float timeLeft = 999.0f;
 
     private FirstPersonController FPC;
 
@@ -52,5 +54,13 @@ public class TimeToGO : MonoBehaviour
         }
     }
 
+    public void TurnOnPowerUpText()
+    {
+        pickUpText.SetActive(true);
+    }
 
+    public void TurnOfPowerUpText()
+    {
+        pickUpText.SetActive(false);
+    }
 }

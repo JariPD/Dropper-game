@@ -3,9 +3,18 @@ using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 using UnityStandardAssets.Utility;
 using Random = UnityEngine.Random;
+using UnityEngine.UI;
 
 namespace UnityStandardAssets.Characters.FirstPerson
 {
+
+    public enum GravityMode
+    {
+        standard,
+        slowed
+    }
+
+
     [RequireComponent(typeof(CharacterController))]
     [RequireComponent(typeof(AudioSource))]
     public class FirstPersonController : MonoBehaviour
@@ -27,6 +36,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
         [SerializeField] private AudioClip[] m_FootstepSounds;    // an array of footstep sounds that will be randomly selected from.
         [SerializeField] private AudioClip m_JumpSound;           // the sound played when character leaves the ground.
         [SerializeField] private AudioClip m_LandSound;           // the sound played when character touches back on ground.
+        
+        [SerializeField] private float slowedGravityForce;
 
         private Camera m_Camera;
         private bool m_Jump;
@@ -41,6 +52,13 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private float m_NextStep;
         private bool m_Jumping;
         private AudioSource m_AudioSource;
+        
+        private Rigidbody rb;
+        private bool playerLocked;
+        private GravityMode gravityMode;
+        private float timerPickup = 0f;
+        private float defaultGravMultiplier;
+        private TimeToGO TTG;
 
         // Use this for initialization
         private void Start()
@@ -55,6 +73,14 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_Jumping = false;
             m_AudioSource = GetComponent<AudioSource>();
             m_MouseLook.Init(transform, m_Camera.transform);
+
+            rb = GetComponent<Rigidbody>();
+            playerLocked = false;
+
+            gravityMode = GravityMode.standard;
+
+            defaultGravMultiplier = m_GravityMultiplier;
+
         }
 
 
@@ -78,6 +104,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
             }
 
             m_PreviouslyGrounded = m_CharacterController.isGrounded;
+
+            
         }
 
 
@@ -128,8 +156,22 @@ namespace UnityStandardAssets.Characters.FirstPerson
             UpdateCameraPosition(speed);
 
             m_MouseLook.UpdateCursorLock();
-        }
 
+
+            if (gravityMode == GravityMode.slowed)
+            {
+                timerPickup += Time.deltaTime;
+                print("gravity changed");
+
+                m_GravityMultiplier = -(defaultGravMultiplier * slowedGravityForce);
+                //rb.AddForce(new Vector3(0, 1400.9f, 0), ForceMode.Impulse);
+                if (timerPickup >= 3)
+                {
+                    m_GravityMultiplier = defaultGravMultiplier;
+                    gravityMode = GravityMode.standard;
+                }
+            }
+        }
 
         private void PlayJumpSound()
         {
@@ -251,6 +293,25 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 return;
             }
             body.AddForceAtPosition(m_CharacterController.velocity * 0.1f, hit.point, ForceMode.Impulse);
+        }
+
+        public void LockPlayer(bool locked)
+        {
+            if (locked == true)
+            {
+                playerLocked = true;
+                rb.constraints = RigidbodyConstraints.FreezeAll;
+            }
+            else
+            {
+                playerLocked = false;
+                rb.constraints = RigidbodyConstraints.None;
+            }
+        }
+
+        public void ChangeForce()
+        {
+            gravityMode = GravityMode.slowed;
         }
     }
 }

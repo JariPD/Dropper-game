@@ -16,7 +16,6 @@ public class Collision : MonoBehaviour
         Physics.SyncTransforms();
     }
 
-
     private void OnControllerColliderHit(ControllerColliderHit collision)
     {
         //print("beep");
