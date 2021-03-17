@@ -36,7 +36,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         [SerializeField] private AudioClip[] m_FootstepSounds;    // an array of footstep sounds that will be randomly selected from.
         [SerializeField] private AudioClip m_JumpSound;           // the sound played when character leaves the ground.
         [SerializeField] private AudioClip m_LandSound;           // the sound played when character touches back on ground.
-        
+
         [SerializeField] private float slowedGravityForce;
 
         private Camera m_Camera;
@@ -52,7 +52,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private float m_NextStep;
         private bool m_Jumping;
         private AudioSource m_AudioSource;
-        
+
         private Rigidbody rb;
         private bool playerLocked;
         private GravityMode gravityMode;
@@ -89,7 +89,10 @@ namespace UnityStandardAssets.Characters.FirstPerson
         {
             RotateView();
             // the jump state needs to read here to make sure it is not missed
-
+            if (!m_Jump)
+            {
+                m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
+            }
 
             if (!m_PreviouslyGrounded && m_CharacterController.isGrounded)
             {
@@ -105,7 +108,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
             m_PreviouslyGrounded = m_CharacterController.isGrounded;
 
-            
+
         }
 
 
@@ -130,9 +133,22 @@ namespace UnityStandardAssets.Characters.FirstPerson
                                m_CharacterController.height / 2f, Physics.AllLayers, QueryTriggerInteraction.Ignore);
             desiredMove = Vector3.ProjectOnPlane(desiredMove, hitInfo.normal).normalized;
 
-            m_MoveDir.x = desiredMove.x * speed;
-            m_MoveDir.z = desiredMove.z * speed;
+            if (rb.constraints != RigidbodyConstraints.FreezeAll)
+            {
+                m_MoveDir.x = desiredMove.x * speed;
+                m_MoveDir.z = desiredMove.z * speed;
 
+                m_MouseLook.XSensitivity = 2;
+                m_MouseLook.YSensitivity = 2;
+            }
+            else
+            {
+                m_MouseLook.XSensitivity = 0;
+                m_MouseLook.YSensitivity = 0;
+
+                rb.velocity = Vector3.zero;
+                m_MoveDir = Vector3.zero;
+            }
 
             if (m_CharacterController.isGrounded)
             {
@@ -140,6 +156,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
                 if (m_Jump)
                 {
+                    Debug.Log(m_JumpSpeed);
                     m_MoveDir.y = m_JumpSpeed;
                     PlayJumpSound();
                     m_Jump = false;
@@ -161,7 +178,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             if (gravityMode == GravityMode.slowed)
             {
                 timerPickup += Time.deltaTime;
-                print("gravity changed");
+                //print("gravity changed");
 
                 m_GravityMultiplier = -(defaultGravMultiplier * slowedGravityForce);
                 //rb.AddForce(new Vector3(0, 1400.9f, 0), ForceMode.Impulse);
