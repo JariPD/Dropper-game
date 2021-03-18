@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.Characters.FirstPerson;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public class TimeToGO : MonoBehaviour
 {
@@ -51,8 +50,7 @@ public class TimeToGO : MonoBehaviour
             timeLeft = 45f;
             timeText.SetActive(true);
 
-            //col.TPPlayerToSpawn();
-            SceneManager.LoadScene("Niels");
+            col.TPPlayerToSpawn();
         }
     }
 
