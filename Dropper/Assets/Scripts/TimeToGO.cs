@@ -14,7 +14,7 @@ public class TimeToGO : MonoBehaviour
 
     private Collision col;
 
-    float timeLeft = 45f;
+    float timeLeft = 45.0f;
 
     private FirstPersonController FPC;
 
