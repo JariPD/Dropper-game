@@ -8,8 +8,13 @@ public class ButtonPress : MonoBehaviour
     private float timePassed;
     private float lerpDuration = 0.5f;
 
+    public GameObject bridge;
+    public GameObject brokenBridge;
+
     private Vector3 startValue;
     private Vector3 endValue;
+
+    public AudioClip bridgeAudio;
 
     void Start()
     {
