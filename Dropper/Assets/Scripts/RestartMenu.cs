@@ -5,6 +5,12 @@ using UnityEngine.SceneManagement;
 
 public class RestartMenu : MonoBehaviour
 {
+    public void PlayGame()
+    {
+        SceneManager.LoadScene("Niels");
+    }
+
+
     public void RestartGame()
     {
         SceneManager.LoadScene("Niels");
