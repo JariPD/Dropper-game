@@ -64,5 +64,6 @@ public class PickUp : MonoBehaviour
 
             isActive = true;
         }
+        
     }
 }

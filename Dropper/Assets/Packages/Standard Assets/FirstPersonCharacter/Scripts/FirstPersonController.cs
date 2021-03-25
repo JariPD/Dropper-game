@@ -324,5 +324,10 @@ namespace UnityStandardAssets.Characters.FirstPerson
         {
             gravityMode = GravityMode.slowed;
         }
+
+        public void ChangeForceBack()
+        {
+            gravityMode = GravityMode.standard;
+        }
     }
 }

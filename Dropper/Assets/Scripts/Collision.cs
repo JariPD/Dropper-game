@@ -1,12 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityStandardAssets.Characters.FirstPerson;
 
 public class Collision : MonoBehaviour
 {
     [SerializeField] private Rigidbody rb;
-   
+    
+    private FirstPersonController FPC;
+    private TimeToGO TTG;
+
+    private void Start()
+    {
+        FPC = FindObjectOfType<FirstPersonController>();
+        TTG = FindObjectOfType<TimeToGO>();
+    }
+
     public void TPPlayerToSpawn()
     {
         transform.position = new Vector3(0, 10, 5);
@@ -28,6 +37,12 @@ public class Collision : MonoBehaviour
             rb.velocity = Vector3.zero;
 
             Physics.SyncTransforms();
+
+            //turns powerup off
+            FPC.ChangeForceBack();
+
+            //turns the powerup Text on
+            TTG.TurnOnPowerUpText();
         }
 
         if (collision.gameObject.CompareTag("Obstacle2"))
@@ -39,6 +54,12 @@ public class Collision : MonoBehaviour
             rb.velocity = Vector3.zero;
 
             Physics.SyncTransforms();
+
+            //turns powerup off
+            FPC.ChangeForceBack();
+
+            //turns the powerup Text on
+            TTG.TurnOnPowerUpText();
         }
 
         if (collision.gameObject.CompareTag("Obstacle3"))
@@ -50,6 +71,12 @@ public class Collision : MonoBehaviour
             rb.velocity = Vector3.zero;
 
             Physics.SyncTransforms();
+
+            //turns powerup off
+            FPC.ChangeForceBack();
+
+            //turns the powerup Text on
+            TTG.TurnOnPowerUpText();
         }
     }  
 }
